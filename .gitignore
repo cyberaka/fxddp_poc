@@ -1,0 +1,12 @@
+
+.DS_Store
+Thumbs.db
+*.class
+*.log
+.gradle
+build
+fxddp-gui/build
+fxddp-net/build
+fxddp-common/build
+
+/.nb-gradle-properties
