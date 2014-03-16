@@ -31,7 +31,7 @@
  */
 package com.cyberaka.fxddp.gui.impl;
 
-import com.cyberaka.fxddp.common.Utils;
+import com.cyberaka.fxddp.common.AppUtils;
 import com.cyberaka.fxddp.common.pojo.RabbitInfo;
 import com.cyberaka.fxddp.gui.common.FxMessageBox;
 import com.cyberaka.fxddp.gui.common.GuiConstants;
@@ -144,18 +144,18 @@ public class FormView implements EventHandler<KeyEvent> {
     private void performSave() {
         String nameStr = nameFld.getText();
         String ageStr = ageFld.getText();
-        if (!Utils.isValidString(nameStr)) {
+        if (!AppUtils.isValidString(nameStr)) {
             showMessageBox(GuiConstants.INVALID_NAME);
             nameFld.requestFocus();
             return;
         }
-        if (!Utils.isValidInt(ageStr)) {
+        if (!AppUtils.isValidInt(ageStr)) {
             showMessageBox(GuiConstants.INVALID_AGE);
             ageFld.requestFocus();
             return;
         }
 
-        int age = Utils.getInt(ageStr);
+        int age = AppUtils.getInt(ageStr);
         nameStr = nameStr.trim();
         RabbitInfo newData = new RabbitInfo(nameStr, age);
         controller.addRabbit(newData);

@@ -36,7 +36,7 @@ package com.cyberaka.fxddp.common;
  *
  * @author cyberaka
  */
-public class Utils {
+public class AppUtils {
 
     public static boolean isValidString(String value) {
         if (value != null) {

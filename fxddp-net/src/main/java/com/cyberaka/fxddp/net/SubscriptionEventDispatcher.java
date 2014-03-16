@@ -49,6 +49,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.advantageous.ddp.DDPMessageHandler.Phase;
+import io.advantageous.ddp.subscription.message.MovedBeforeMessage;
+import io.advantageous.ddp.subscription.message.NoSubscriptionMessage;
+import io.advantageous.ddp.subscription.message.ReadyMessage;
+import io.advantageous.ddp.subscription.message.SubscribeMessage;
+import io.advantageous.ddp.subscription.message.UnsubscribeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,27 +76,33 @@ public class SubscriptionEventDispatcher {
         this.register(Constants.RABBITS_COLLECTION_NAME, new SubscriptionEventHandler() {
             @Override
             public void handleAdded(final String key) {
-                LOGGER.info(key);
+                LOGGER.info("handleAdded() >> " + key);
                 eventBus.post(new RabbitsAddedEvent(key, (Rabbit) dataMap.get(Constants.RABBITS_COLLECTION_NAME).get(key)));
             }
 
             @Override
             public void handleChanged(final String key) {
-                LOGGER.info(key);
+                LOGGER.info("handleChanged() >> " + key);
                 eventBus.post(new RabbitsUpdatedEvent(key, (Rabbit) dataMap.get(Constants.RABBITS_COLLECTION_NAME).get(key)));
             }
 
             @Override
             public void handleRemoved(final String key) {
-                LOGGER.info(key);
+                LOGGER.info("handleRemoved() >> " + key);
                 eventBus.post(new RabbitsRemovedEvent(key));
             }
+
         });
 
         endpoint.registerHandler(AddedMessage.class, Phase.AFTER_UPDATE, this::handleAdded);
         endpoint.registerHandler(AddedBeforeMessage.class, Phase.AFTER_UPDATE, this::handleAddedBefore);
         endpoint.registerHandler(ChangedMessage.class, Phase.AFTER_UPDATE, this::handleChanged);
         endpoint.registerHandler(RemovedMessage.class, Phase.AFTER_UPDATE, this::handleRemoved);
+        
+//        endpoint.registerHandler(AddedMessage.class, Phase.UPDATE, this::handleAdded);
+//        endpoint.registerHandler(AddedBeforeMessage.class, Phase.UPDATE, this::handleAddedBefore);
+//        endpoint.registerHandler(ChangedMessage.class, Phase.UPDATE, this::handleChanged);
+//        endpoint.registerHandler(RemovedMessage.class, Phase.UPDATE, this::handleRemoved);
 
     }
 
@@ -100,6 +111,7 @@ public class SubscriptionEventDispatcher {
     }
 
     public void handleAdded(final AddedMessage message) {
+        LOGGER.info("handleAdded()" + message);
         final SubscriptionEventHandler handler = this.handlerMap.get(message.getCollection());
         if (handler != null) {
             handler.handleAdded(message.getId());
@@ -107,6 +119,7 @@ public class SubscriptionEventDispatcher {
     }
 
     public void handleAddedBefore(final AddedBeforeMessage message) {
+        LOGGER.info("handleAddedBefore()" + message);
         final SubscriptionEventHandler handler = this.handlerMap.get(message.getCollection());
         if (handler != null) {
             handler.handleAdded(message.getId());
@@ -114,6 +127,7 @@ public class SubscriptionEventDispatcher {
     }
 
     public void handleChanged(final ChangedMessage message) {
+        LOGGER.info("handleChanged()" + message);
         final SubscriptionEventHandler handler = this.handlerMap.get(message.getCollection());
         if (handler != null) {
             handler.handleChanged(message.getId());
@@ -121,12 +135,13 @@ public class SubscriptionEventDispatcher {
     }
 
     public void handleRemoved(final RemovedMessage message) {
+        LOGGER.info("handleRemoved()" + message);
         final SubscriptionEventHandler handler = this.handlerMap.get(message.getCollection());
         if (handler != null) {
             handler.handleRemoved(message.getId());
         }
     }
-
+    
     public interface SubscriptionEventHandler {
 
         void handleAdded(String key);
@@ -134,6 +149,7 @@ public class SubscriptionEventDispatcher {
         void handleChanged(String key);
 
         void handleRemoved(String key);
+        
     }
 
 }

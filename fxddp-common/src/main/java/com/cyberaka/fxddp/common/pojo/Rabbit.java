@@ -40,7 +40,9 @@ public class Rabbit {
 
     private String name;
 
-    private Number age;
+    private Object createdAt;
+    
+    private String age;
 
     public String getName() {
         return name;
@@ -50,14 +52,22 @@ public class Rabbit {
         this.name = name;
     }
 
-    public Number getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(Number age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
+    public Object getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Object createdAt) {
+        this.createdAt = createdAt;
+    }
+    
     @Override
     public String toString() {
         return "Rabbit{" + "name=" + name + ", age=" + age + '}';

@@ -82,9 +82,9 @@ public class MainViewController implements Initializable {
     @Subscribe
     public void handleAdded(final RabbitsAddedEvent event) {
         Platform.runLater(() -> {
-            LOGGER.info(event.toString());
+            LOGGER.info("handleAdded() >> " + event.toString());
             Rabbit newRabbit = event.getRabbit();
-            RabbitInfo newRabbitInfo = new RabbitInfo(newRabbit.getName(), newRabbit.getAge().intValue());
+            RabbitInfo newRabbitInfo = new RabbitInfo(newRabbit.getName(), Integer.parseInt(newRabbit.getAge()));
             rabbitList.add(newRabbitInfo);
             itemMap.put(event.getKey(), newRabbitInfo);
         });
@@ -93,7 +93,7 @@ public class MainViewController implements Initializable {
     @Subscribe
     public void handleRemoved(final RabbitsRemovedEvent event) {
         Platform.runLater(() -> {
-            LOGGER.info(event.toString());
+            LOGGER.info("handleRemoved() >> " + event.toString());
             RabbitInfo removedInfo = itemMap.remove(event.getKey());
             rabbitList.remove(removedInfo);
         });
@@ -102,11 +102,11 @@ public class MainViewController implements Initializable {
     @Subscribe
     public void handleModified(final RabbitsUpdatedEvent event) {
         Platform.runLater(() -> {
-            LOGGER.info(event.toString());
+            LOGGER.info("handleModified() >> " + event.toString());
             RabbitInfo foundInfo = itemMap.get(event.getKey());
             int index = rabbitList.lastIndexOf(foundInfo);
             Rabbit modifiedRabbit = event.getRabbit();
-            RabbitInfo modifiedRabbitInfo = new RabbitInfo(modifiedRabbit.getName(), modifiedRabbit.getAge().intValue());
+            RabbitInfo modifiedRabbitInfo = new RabbitInfo(modifiedRabbit.getName(), Integer.parseInt(modifiedRabbit.getAge()));
             rabbitList.set(index, modifiedRabbitInfo);
             itemMap.put(event.getKey(), modifiedRabbitInfo);
         });
@@ -158,9 +158,9 @@ public class MainViewController implements Initializable {
 
     public void addRabbit(RabbitInfo newData) {
         Rabbit rabbit = new Rabbit();
-        rabbit.setAge(newData.getAge());
+        rabbit.setAge("" + newData.getAge());
         rabbit.setName(newData.getName());
-        LOGGER.info("Adding new rabbit >> " + rabbit);
+        LOGGER.info("addRabbit() >> Adding new rabbit >> " + rabbit);
         eventBus.post(new NewRabbitAddedEvent("" + System.currentTimeMillis(), rabbit));
     }
 }

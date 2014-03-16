@@ -33,6 +33,8 @@ package com.cyberaka.fxddp.gui.impl;
 
 import com.cyberaka.fxddp.common.pojo.RabbitInfo;
 import com.cyberaka.fxddp.gui.common.GuiConstants;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -64,14 +66,19 @@ public class DataView {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.setItems(controller.getDataList());
         TableColumn<RabbitInfo, String> nameCol = new TableColumn<>(GuiConstants.LABEL_NAME);
-        nameCol.setEditable(true);
-        nameCol.setCellValueFactory(new PropertyValueFactory(RabbitInfo.PROPERTY_NAME));
+        nameCol.setEditable(false);
+        nameCol.setCellValueFactory(new PropertyValueFactory<RabbitInfo, String>(RabbitInfo.PROPERTY_NAME));
         nameCol.setPrefWidth(tableView.getPrefWidth() / 2);
         TableColumn<RabbitInfo, String> ageCol = new TableColumn<>(GuiConstants.LABEL_AGE);
-        ageCol.setCellValueFactory(new PropertyValueFactory(RabbitInfo.PROPERTY_AGE));
+        ageCol.setCellValueFactory(new PropertyValueFactory<RabbitInfo, String>(RabbitInfo.PROPERTY_AGE));
         ageCol.setPrefWidth(tableView.getPrefWidth() / 2);
-        ageCol.setEditable(true);
-        tableView.getColumns().setAll(nameCol, ageCol);
+        ageCol.setEditable(false);
+        
+        List<TableColumn<RabbitInfo, String>> col = new ArrayList<>();
+        col.add(nameCol);
+        col.add(ageCol);
+        tableView.getColumns().setAll(col);
+        
         GridPane.setHgrow(tableView, Priority.ALWAYS);
 
         gridPaneView.add(tableView, 0, 0);
